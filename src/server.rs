@@ -5,7 +5,7 @@ use std::{
 
 use axum::{
     Json, Router,
-    extract::{ConnectInfo, connect_info},
+    extract::{ConnectInfo, DefaultBodyLimit, connect_info},
     routing::{get, post},
     serve::IncomingStream,
 };
@@ -65,6 +65,7 @@ pub async fn start_server(socket: &PathBuf, data_file: &PathBuf) -> Result<()> {
         .route("/lock", get(handle_lock))
         .route("/encrypt", post(handle_encrypt))
         .route("/decrypt", post(handle_decrypt))
+        .layer(DefaultBodyLimit::max(10000000000)) // 10 GB
         .into_make_service_with_connect_info::<UdsConnectInfo>();
     axum::serve(listener, app).await?;
     Ok(())
