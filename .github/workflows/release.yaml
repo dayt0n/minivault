@@ -47,5 +47,6 @@ jobs:
       - name: cargo login and publish
         run: |-
           . "$HOME/.cargo/env"
-          echo "${{ secrets.CRATES_IO_API_TOKEN }}" | cargo login
           cargo publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_API_TOKEN }}
