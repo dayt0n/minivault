@@ -54,9 +54,6 @@ enum Commands {
 
 impl CLI {
     pub async fn exec(&self) -> Result<()> {
-        // probably need to implement an init process.
-        // all the command-line and http server stuff is basically done.
-        // just need to implement the actual crypto portion.
         match &self.cmd {
             Commands::Run(args) => args.exec(&self.socket).await,
             Commands::Unlock(args) => args.exec(&self.socket).await,
