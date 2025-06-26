@@ -1,3 +1,4 @@
+[crates.io](https://crates.io/crates/minivault) | [Documentation](https://docs.rs/minivault/)
 # minivault
 
 This is a miniature, stripped down, local version of [Hashicorp Vault's Encryption as a Service](https://developer.hashicorp.com/vault/tutorials/encryption-as-a-service). 
