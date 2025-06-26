@@ -1,0 +1,52 @@
+[package]
+name = "minivault"
+authors = ["Dayton Hasty <dayt0n@dayt0n.com>"]
+description = "Local-only, light-weight Encryption as a Service."
+license = "BSD-3-Clause"
+repository = "https://github.com/dayt0n/minivault"
+readme = "README.md"
+keywords = ["encryption", "vault", "UNIX", "socket"]
+categories = ["command-line-utilities", "cryptography", "security"]
+version = "1.0.0"
+edition = "2024"
+exclude = [
+    "example-clients",
+    "benches",
+    ".github",
+    "profile.sh",
+    ".goreleaser.yaml",
+]
+
+[dependencies]
+axum = "0.8.4"
+clap = { version = "4.5.40", features = ["derive"] }
+color-eyre = "0.6.5"
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
+tokio = { version = "1.45.1", features = ["full"] }
+hyper = { version = "1", features = ["full"] }
+http-body-util = "0.1"
+hyper-util = { version = "0.1", features = ["full"] }
+rpassword = "7.4.0"
+base64 = "0.22.1"
+serde_yaml = "0.9.34"
+aes-gcm = "0.10.3"
+argon2 = "0.5.3"
+rustc-hash = "2.1.1"
+
+[[bin]]
+name = "minivault"
+src = "src/main.rs"
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+opt-level = 3
+panic = "abort"
+
+[dev-dependencies]
+criterion = { version = "0.6" }
+
+[[bench]]
+name = "minivault_bench"
+harness = false

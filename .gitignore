@@ -1,0 +1,9 @@
+/target
+Cargo.lock
+*.sock
+*.yml
+dummy.go
+build.sh
+dist/
+cargo-flamegraph.trace
+flamegraph.svg

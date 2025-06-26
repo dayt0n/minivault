@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: release
+
+on:
+  push:
+    tags:
+      - "*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.23
+      - name: setup dummy.go and install rust
+        run: |
+          printf 'package main\nfunc main() {}' > dummy.go
+          cat <<EOF >>build.sh
+          #!/bin/sh
+          . "$HOME/.cargo/env"
+          cargo build -r --target=x86_64-unknown-linux-musl
+          mkdir -p dist/linux_amd64
+          cp target/x86_64-unknown-linux-musl/release/minivault dist/minivault_linux_amd64_v1/.
+          EOF
+          curl https://sh.rustup.rs -sSf | sh -s -- -y
+          . "$HOME/.cargo/env"
+          rustup target add x86_64-unknown-linux-musl
+      - name: test minivault
+        run: |
+          . "$HOME/.cargo/env"
+          cargo test
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
+      - name: cargo login and publish
+        run: |-
+          . "$HOME/.cargo/env"
+          echo "${{ secrets.CRATES_IO_API_TOKEN }}" | cargo login
+          cargo publish
